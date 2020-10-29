@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        .error
+        {
+            color: red;
+        }
+        .c1
+        {
+            border: 2px  red ridge;
+        }
+        .c2
+        {
+            border: 2px green ridge;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 mx-auto">
+                <form action="" id="formal">
+
+                    <input type="text" name="myName" id="myName" placeholder="Enter your name" class="form-control">
+                    <br>
+                    <input type="text" name="email" id="email" placeholder="Enter your email" class="form-control">
+                    <br>
+                    <input type="text" name="pass" id="pass" placeholder="Enter your password" class="form-control">
+                    <br>
+                    <input type="text" name="cpass" id="cpass" placeholder="Enter conform password" class="form-control">
+                    <br>
+                    <input type="text" name="fName" id="fName" placeholder="Enter your first name" class="form-control">
+                    <br>
+                    <input type="text" name="age" id="age" placeholder="Enter your age" class="form-control">
+                    <br>
+                    <input type="text" name="dob" id="dob" placeholder="Enter date of birth year-month-day" class="form-control">
+                    <br>
+                    <input type="text" name="st" id="st" placeholder="Enter your number" class="form-control">
+                    <br>
+                    <input type="text" name="ltr" id="ltr" placeholder="Enter Letters only" class="form-control">
+                    <br>
+                    <input type="text" name="alpha" id="alpha" placeholder="Enter alphabets and numbers" class="form-control">
+                    <br>
+                    <input type="text" name="punc" id="punc" placeholder="Enter alphabets with basic punc" class="form-control">
+                    <br>
+                    <input type="text" name="url" id="url" placeholder="Enter URL" class="form-control">
+                    <br>
+                    <input type="hidden" name="data" id="data" value="5">
+                    <input type="text" name="num1" id="num1" placeholder="Enter a numbers" class="form-control">
+                    <br>
+                    <fieldset>
+                        <legend>GENDER</legend>
+                        <input type="radio" name="gender[]" value="Male">Male<br>
+                        <input type="radio" name="gender[]" value="Female">Female<br>
+                        <label for="gender[]" class="error" style="display: none;"></label>
+                    </fieldset>
+                    <br>
+                    <input type="checkbox" name="check" id="check">Accept the terms<br>
+                    <label for="check" class="error" style="display: none;"></label>
+                    <input type="submit" value="Submit" class="btn btn-info btn-block">
+                </form>
+                <h2 id="summary"></h2>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="jquery-validation/jv/dist/jquery.validate.min.js"></script>
+    <script src="jquery-validation/jv/dist/additional-methods.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            $.validator.addMethod("StrongPassword",function(value){
+                return /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value);
+            },"Please Enter Strong Password");
+
+            $("#formal").validate({
+                rules:{
+                    myName:{
+                        required:true,
+                        minlength:3,
+                        maxlength:20
+                    },
+                    email:{
+                        required:true,
+                        email:true
+                    },
+                    pass:{
+                        required:true,
+                        StrongPassword:true
+                    },
+                    cpass:{
+                        required:true,
+                        equalTo:"#pass"
+                    },
+                    fName:{
+                        required:true,
+                        nowhitespace:true
+                    },
+                    age:{
+                        required:true,
+                        //range:[10,50]
+                        min:10,
+                        max:50
+                    },
+                    dob:{
+                        required:true,
+                        date:true
+                    },
+                    st:{
+                        required:true,
+                        //step:10
+                       // number:true
+                       digits:true
+                    },
+                    ltr:{
+                        required:true,
+                        Lettersonly:true
+                    },
+                    alpha:{
+                        required:true,
+                        alphanumeric:true
+                    },
+                    punc:{
+                        required:true,
+                        letterswithbasicpunc:true
+                    },
+                    url:{
+                        required:true,
+                        url:true
+                    },
+                    num1:{
+                        required:true,
+                        lessThanEqual:"#data"
+                    },
+                    'gender[]':{
+                        required:true
+                    },
+                    check:{
+                        required:true
+                    }
+                },
+                highlight : function(element){
+                    $(element).addClass("c1");
+                    $(element).removeClass("c2");
+                },
+                unhighlight:function(element){
+                    $(element).addClass("c2");
+                },
+                invalidHandler:function(element){
+                    var validator=$("#formal").validate();
+                    $("#summary").text(validator.numberOfInvalids()+"fields are invalid..");
+                },
+                messages:{
+                    myName:{
+                        required:"Name is mandatory",
+                        minlength:"3 charactor must"
+                    },
+                    email:{
+                        required:"Email is mandatory",
+                        email:"Invalid email"
+                    },
+                    pass:{
+                        required:"password is mandatory"
+                    },
+                    cpass:{
+                        required:"confirm password is mandatory" ,
+                        equalTo:"Both passwords are not identical"
+                    }
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>
